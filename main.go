@@ -16,6 +16,7 @@ func main() {
 	}
 
 	discord.AddHandler(ready)
+	discord.AddHandler(messageCreate)
 
 	err = discord.Open()
 	if err != nil {
@@ -32,4 +33,14 @@ func main() {
 
 func ready(s *discordgo.Session, event *discordgo.Ready) {
 	s.UpdateStatus(0, "Hello G16!")
+}
+
+func messageCreate(s *discordgo.Session, event *discordgo.MessageCreate) {
+	if event.Author.ID == s.State.User.ID {
+		return
+	}
+
+	if event.Content == "!g16 hello" {
+		s.ChannelMessageSend(event.ChannelID, "Hi "+event.Author.Mention())
+	}
 }
